@@ -27,22 +27,15 @@ Install Required Libraries: You can install the necessary libraries using pip:
 pip install opencv-python numpy scikit-learn pillow
 Download the Dataset: To train the SVM model, you will need a dataset of real and fake faces. Follow these steps:
 
-Go to Kaggle.
-Search for a dataset containing images of real and fake faces. A popular choice is the "Real and Fake Faces" dataset.
+navigate to kaggle website by using the below link and download the datasets to train the svm model:
+https://www.kaggle.com/datasets/ciplab/real-and-fake-face-detection
+
 Download the dataset to your local machine.
 Extract the dataset, and organize the images into two folders: real and fake.
-Your folder structure should look like this:
 
-sql
-Copy code
-├── real-vs-fake-face-classifier/
-│   ├── real/
-│   │   └── (real face images)
-│   ├── fake/
-│   │   └── (fake face images)
 Train the SVM Model by providing the path directory of the real and fake images installed in your desktop/laptop in the program and run the program.
 
-Run the training script (train_model.py) to create and save the SVM model:
+Run the training script  to create and save the SVM model:
 Launch the GUI application:
 Click the "Select Image" button to upload a face image.
 
