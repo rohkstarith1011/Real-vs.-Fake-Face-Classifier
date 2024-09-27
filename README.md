@@ -21,9 +21,7 @@ This project implements a machine learning application that classifies images of
 
 ## Installation
  **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/real-vs-fake-face-classifier.git
-   cd real-vs-fake-face-classifier
+   https://github.com/rohkstarith1011/Real-vs.-Fake-Face-Classifier/tree/main
 Install Required Libraries: You can install the necessary libraries using pip:
 
 pip install opencv-python numpy scikit-learn pillow
@@ -42,7 +40,7 @@ Copy code
 │   │   └── (real face images)
 │   ├── fake/
 │   │   └── (fake face images)
-Train the SVM Model:
+Train the SVM Model by providing the path directory of the real and fake images installed in your desktop/laptop in the program and run the program.
 
 Run the training script (train_model.py) to create and save the SVM model:
 Launch the GUI application:
