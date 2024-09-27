@@ -1,0 +1,80 @@
+import tkinter as tk
+from tkinter import filedialog, messagebox
+import cv2
+import numpy as np
+import joblib
+from PIL import Image, ImageTk
+import os
+
+# Function to extract features from images (simple grayscale histogram)
+def extract_features(image_path):
+    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+    return hist.flatten()
+
+# Function to classify the input image
+def classify_image():
+    try:
+        # Ask for the input image
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            # Load the trained SVM model
+            clf = joblib.load('svm_model.joblib')
+
+            # Extract features from the input image
+            features = extract_features(file_path)
+            features = np.array(features).reshape(1, -1)
+
+            # Predict using the trained classifier
+            prediction = clf.predict(features)[0]
+
+            # Display the input image
+            img = cv2.imread(file_path)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = cv2.resize(img, (300, 300))  # Resize for display
+            img = Image.fromarray(img)
+            img = ImageTk.PhotoImage(img)
+            image_label.config(image=img)
+            image_label.image = img
+
+            # Display the classification result
+            result_label.config(text=f"Prediction: {'Real' if prediction == 0 else 'Fake'}")
+
+            # Display image information (width and height)
+            image_info_label.config(text=f"Image: {os.path.basename(file_path)}, Size: {img.width()}x{img.height()}")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+# Function to clear the displayed image and classification result
+def clear_image():
+    image_label.config(image=None)
+    result_label.config(text="")
+    image_info_label.config(text="")
+
+# Create the main application window
+root = tk.Tk()
+root.title("Real vs. Fake Face Classifier")
+
+# Button to select and classify an image
+classify_button = tk.Button(root, text="Select Image", command=classify_image)
+classify_button.pack(pady=10)
+
+# Label to display the classification result
+result_label = tk.Label(root, text="", font=("Arial", 16))
+result_label.pack(pady=5)
+
+# Label to display image information
+image_info_label = tk.Label(root, text="", font=("Arial", 12))
+image_info_label.pack()
+
+# Label to display the input image
+image_label = tk.Label(root)
+image_label.pack()
+
+# Button to clear the displayed image and classification result
+clear_button = tk.Button(root, text="Clear", command=clear_image)
+clear_button.pack(pady=5)
+
+# Run the GUI application
+root.mainloop()
