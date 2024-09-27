@@ -1,0 +1,54 @@
+import cv2
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, classification_report
+import os
+import joblib
+
+# Function to extract features from images (simple grayscale histogram)
+def extract_features(image_path):
+    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+    return hist.flatten()
+
+# Path to your dataset (real and fake faces)
+real_faces_dir = "PASTE THE REAL FACES DIRECTORY"
+fake_faces_dir = "PASTE THE FAKE FACES DIRECTORY"
+
+# Get file paths for real and fake faces
+real_faces = [os.path.join(real_faces_dir, f) for f in os.listdir(real_faces_dir) if f.endswith('.jpg')]
+fake_faces = [os.path.join(fake_faces_dir, f) for f in os.listdir(fake_faces_dir) if f.endswith('.jpg')]
+
+# Create labels for real and fake faces
+labels = ['real'] * len(real_faces) + ['fake'] * len(fake_faces)
+
+# Combine real and fake faces with labels
+all_faces = real_faces + fake_faces
+
+# Extract features for all faces
+X = [extract_features(img_path) for img_path in all_faces]
+
+# Convert labels to numerical values
+label_dict = {'real': 0, 'fake': 1}
+y = np.array([label_dict[label] for label in labels])
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a Support Vector Machine (SVM) classifier
+clf = SVC()
+clf.fit(X_train, y_train)
+
+# Save the trained SVM model
+joblib.dump(clf, 'svm_model.joblib')
+
+# Make predictions on the test set
+y_pred = clf.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy * 100:.2f}%")
+
+# Display classification report
+print("Classification Report:\n", classification_report(y_test, y_pred))
